@@ -1,0 +1,328 @@
+/* ─────────────────────────────────────────
+   MedicinesPage.css
+   ───────────────────────────────────────── */
+
+/* ── Layout & Base ── */
+.medicines-page {
+  min-height: 100vh;
+  background: #f0f4f0;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  padding-bottom: 80px;
+}
+
+/* ── Header ── */
+.medicines-header {
+  background: white;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+}
+
+.header-sub {
+  font-size: 13px;
+  color: #888;
+}
+
+/* ── Search Bar ── */
+.search-wrapper {
+  padding: 14px 20px 0;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 11px 14px;
+  transition: border-color 0.2s;
+}
+
+.search-box:focus-within {
+  border-color: #2a9b6f;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111;
+  background: transparent;
+}
+
+.search-box input::placeholder {
+  color: #bbb;
+}
+
+/* ── Category Filters ── */
+.filters-row {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters-row::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1.5px solid #e0e0e0;
+  background: white;
+  color: #555;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-chip.active {
+  background: #0c503b;
+  border-color: #0c503b;
+  color: white;
+  font-weight: 600;
+}
+
+/* ── Results count ── */
+.results-meta {
+  padding: 14px 20px 4px;
+  font-size: 13px;
+  color: #888;
+}
+
+.results-meta span {
+  color: #0c503b;
+  font-weight: 600;
+}
+
+/* ── Medicine Card ── */
+.medicines-list {
+  padding: 8px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.medicine-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.medicine-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+.medicine-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e1f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.medicine-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.medicine-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.medicine-generic {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.medicine-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.badge-in-stock {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #e1f5ee;
+  color: #0c503b;
+  font-weight: 500;
+}
+
+.badge-out-of-stock {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: #fdecea;
+  color: #b71c1c;
+  font-weight: 500;
+}
+
+.pharmacy-count {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.medicine-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.medicine-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2a9b6f;
+  white-space: nowrap;
+}
+
+.medicine-price-sub {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: -4px;
+}
+
+.btn-add-cart {
+  padding: 6px 12px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s;
+}
+
+.btn-add-cart:hover {
+  background: #228a5f;
+}
+
+/* ── Compare bar (appears when ≥2 items selected) ── */
+.compare-bar {
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  background: #0c503b;
+  color: white;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 50;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.btn-compare {
+  padding: 8px 16px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-compare-clear {
+  background: none;
+  border: none;
+  color: #aed6c4;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #aaa;
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #e1f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.empty-state-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.empty-state-sub {
+  font-size: 13px;
+  line-height: 1.5;
+}

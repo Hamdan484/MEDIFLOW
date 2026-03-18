@@ -1,0 +1,277 @@
+/* ─────────────────────────────────────────
+   Cards.css
+   ───────────────────────────────────────── */
+
+/* ── Shared base font ── */
+.stat-card,
+.drug-card,
+.pharmacy-card,
+.section-card {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+}
+
+/* ════════════════════════════════════════
+   1. StatCard
+   ════════════════════════════════════════ */
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #eee;
+}
+
+.stat-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.stat-card-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.stat-card-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1;
+}
+
+.stat-card-change {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.stat-card-change.up   { color: #2a9b6f; }
+.stat-card-change.down { color: #e53935; }
+
+/* ════════════════════════════════════════
+   2. DrugCard
+   ════════════════════════════════════════ */
+.drug-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.drug-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+.drug-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e1f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.drug-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111;
+}
+
+.drug-card-generic {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.drug-card-right {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.drug-card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2a9b6f;
+}
+
+.drug-card-stores {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* ════════════════════════════════════════
+   3. PharmacyCard
+   ════════════════════════════════════════ */
+.pharmacy-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+
+.pharmacy-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+.pharmacy-card.best {
+  border: 2px solid #2a9b6f;
+}
+
+.pharmacy-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.pharmacy-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.pharmacy-card-address {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.pharmacy-card-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a9b6f;
+  text-align: right;
+}
+
+.pharmacy-card-price-unit {
+  font-size: 12px;
+  color: #aaa;
+  text-align: right;
+}
+
+.pharmacy-card-bottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.pharmacy-card-distance,
+.pharmacy-card-hours {
+  font-size: 12px;
+  color: #666;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ddd;
+  flex-shrink: 0;
+}
+
+.btn-directions {
+  margin-left: auto;
+  padding: 6px 14px;
+  background: #e1f5ee;
+  color: #0c503b;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-directions:hover { background: #c8eddf; }
+
+/* ════════════════════════════════════════
+   4. SectionCard
+   ════════════════════════════════════════ */
+.section-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.section-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+.section-card-action {
+  font-size: 13px;
+  color: #2a9b6f;
+  font-weight: 500;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.section-card-action:hover { color: #0c503b; }
+
+/* ════════════════════════════════════════
+   Shared stock badges
+   ════════════════════════════════════════ */
+.badge-in-stock {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  background: #e1f5ee;
+  color: #0c503b;
+}
+
+.badge-out-of-stock {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  background: #fdecea;
+  color: #b71c1c;
+}
+
+.badge-best-price {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: #2a9b6f;
+  color: white;
+  font-weight: 600;
+  margin-bottom: 8px;
+}

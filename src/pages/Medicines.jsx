@@ -1,226 +1,398 @@
-import { useState, useRef } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Styles/Medicines.css";
 
-const MOCK_OCR_RESULTS = [
-  { id: 1, name: "Paracetamol",  generic: "Acetaminophen 500mg" },
-  { id: 2, name: "Amoxicillin",  generic: "Amoxicillin 250mg" },
-  { id: 3, name: "Metformin",    generic: "Metformin HCl 500mg" },
+/* ── Mock data — replace with API call ── */
+const MEDICINES = [
+  {
+    id: 1,
+    name: "Paracetamol",
+    generic: "Acetaminophen 500mg",
+    category: "Pain Relief",
+    price: 3.8,
+    inStock: true,
+    pharmacies: 12,
+  },
+  {
+    id: 2,
+    name: "Amoxicillin",
+    generic: "Amoxicillin 250mg",
+    category: "Antibiotics",
+    price: 15.0,
+    inStock: true,
+    pharmacies: 8,
+  },
+  {
+    id: 3,
+    name: "Metformin",
+    generic: "Metformin HCl 500mg",
+    category: "Diabetes",
+    price: 12.0,
+    inStock: true,
+    pharmacies: 6,
+  },
+  {
+    id: 4,
+    name: "Artemether",
+    generic: "Artemether/Lumefantrine",
+    category: "Malaria",
+    price: 22.5,
+    inStock: true,
+    pharmacies: 10,
+  },
+  {
+    id: 5,
+    name: "Omeprazole",
+    generic: "Omeprazole 20mg",
+    category: "Digestive",
+    price: 8.5,
+    inStock: false,
+    pharmacies: 4,
+  },
+  {
+    id: 6,
+    name: "Amlodipine",
+    generic: "Amlodipine 5mg",
+    category: "Hypertension",
+    price: 9.0,
+    inStock: true,
+    pharmacies: 7,
+  },
+  {
+    id: 7,
+    name: "Ibuprofen",
+    generic: "Ibuprofen 400mg",
+    category: "Pain Relief",
+    price: 5.2,
+    inStock: true,
+    pharmacies: 11,
+  },
+  {
+    id: 8,
+    name: "Ciprofloxacin",
+    generic: "Ciprofloxacin 500mg",
+    category: "Antibiotics",
+    price: 18.0,
+    inStock: false,
+    pharmacies: 3,
+  },
+  {
+    id: 9,
+    name: "Salbutamol",
+    generic: "Salbutamol 2mg",
+    category: "Respiratory",
+    price: 11.0,
+    inStock: true,
+    pharmacies: 5,
+  },
+  {
+    id: 10,
+    name: "Lisinopril",
+    generic: "Lisinopril 10mg",
+    category: "Hypertension",
+    price: 14.0,
+    inStock: true,
+    pharmacies: 6,
+  },
 ];
 
-const STEPS = ["Upload", "Review", "Search"];
+const CATEGORIES = [
+  "All",
+  "Pain Relief",
+  "Antibiotics",
+  "Malaria",
+  "Diabetes",
+  "Hypertension",
+  "Digestive",
+  "Respiratory",
+];
 
-const s = {
-  page: { minHeight: "100vh", background: "#f0f4f0", fontFamily: "'DM Sans','Segoe UI',sans-serif", paddingBottom: "80px" },
-  header: { background: "white", padding: "16px 20px", borderBottom: "1px solid #eee", display: "flex", alignItems: "center", gap: "12px" },
-  backBtn: { width: "36px", height: "36px", borderRadius: "10px", background: "#f5f5f5", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", flexShrink: 0 },
-  headerTitle: { fontSize: "17px", fontWeight: 700, color: "#111" },
-  headerSub: { fontSize: "13px", color: "#888" },
-  stepsRow: { display: "flex", alignItems: "center", padding: "20px" },
-  stepItem: { display: "flex", flexDirection: "column", alignItems: "center", flex: 1 },
-  stepLine: (done) => ({ flex: 1, height: "2px", background: done ? "#2a9b6f" : "#e0e0e0", marginBottom: "18px" }),
-  stepCircle: (state) => ({
-    width: "32px", height: "32px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: 700,
-    background: state === "done" ? "#2a9b6f" : state === "active" ? "#0c503b" : "#e0e0e0",
-    color: state === "idle" ? "#aaa" : "white",
-  }),
-  stepLabel: (active) => ({ fontSize: "11px", color: active ? "#0c503b" : "#888", marginTop: "5px", fontWeight: active ? 600 : 500 }),
-  section: { padding: "0 20px" },
-  uploadBox: { border: "2px dashed #b0d8c4", borderRadius: "20px", background: "white", padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", marginBottom: "16px" },
-  uploadIcon: { width: "64px", height: "64px", borderRadius: "16px", background: "#e1f5ee", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "14px" },
-  uploadTitle: { fontSize: "16px", fontWeight: 700, color: "#111", marginBottom: "6px" },
-  uploadSub: { fontSize: "13px", color: "#888", textAlign: "center", lineHeight: 1.5 },
-  orRow: { display: "flex", alignItems: "center", gap: "10px", color: "#bbb", fontSize: "13px", margin: "16px 0" },
-  orLine: { flex: 1, height: "1px", background: "#eee" },
-  btnCamera: { width: "100%", padding: "14px", background: "#2a9b6f", color: "white", border: "none", borderRadius: "14px", fontSize: "15px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "10px" },
-  btnGallery: { width: "100%", padding: "13px", background: "white", color: "#2a9b6f", border: "1.5px solid #2a9b6f", borderRadius: "14px", fontSize: "15px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" },
-  previewBox: { background: "white", borderRadius: "16px", border: "1px solid #eee", overflow: "hidden", marginBottom: "16px" },
-  previewImg: { width: "100%", height: "160px", objectFit: "cover" },
-  previewPlaceholder: { width: "100%", height: "160px", background: "#e1f5ee", display: "flex", alignItems: "center", justifyContent: "center" },
-  ocrHeader: { padding: "14px 16px 10px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between" },
-  ocrTitle: { fontSize: "14px", fontWeight: 700, color: "#111" },
-  ocrBadge: { fontSize: "11px", padding: "3px 8px", borderRadius: "20px", background: "#e1f5ee", color: "#0c503b", fontWeight: 600 },
-  drugExtract: { display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", borderBottom: "1px solid #f5f5f5" },
-  extractCheck: { width: "22px", height: "22px", borderRadius: "6px", background: "#e1f5ee", border: "none", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  extractName: { fontSize: "14px", fontWeight: 600, color: "#111" },
-  extractGeneric: { fontSize: "12px", color: "#888" },
-  extractRemove: { padding: "4px 10px", borderRadius: "8px", fontSize: "12px", color: "#e53935", background: "#fdecea", border: "none", cursor: "pointer", fontFamily: "inherit", fontWeight: 500 },
-  infoBox: { background: "#fff8e1", borderRadius: "12px", padding: "12px 14px", marginBottom: "16px", display: "flex", gap: "10px", fontSize: "13px", color: "#7a5c00", lineHeight: 1.5 },
-  btnSearch: { width: "100%", padding: "14px", background: "#2a9b6f", color: "white", border: "none", borderRadius: "14px", fontSize: "15px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" },
-  btnPrimary: { width: "100%", padding: "14px", background: "#2a9b6f", color: "white", border: "none", borderRadius: "14px", fontSize: "15px", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "10px" },
-};
+/* ── Icons ── */
 
-export default function PrescriptionPage() {
-  const [step, setStep] = useState(1);          // 1=upload, 2=review, 3=done
-  const [imageUrl, setImageUrl] = useState(null);
-  const [drugs, setDrugs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const fileRef = useRef();
-  const cameraRef = useRef();
+function BackIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="#555"
+      strokeWidth={2.2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      width="17"
+      height="17"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="#bbb"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"
+      />
+    </svg>
+  );
+}
+
+function PillIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="#2a9b6f"
+      strokeWidth={1.8}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0
+           0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
+      />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="white"
+      strokeWidth={2.5}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+  );
+}
+
+function EmptyIcon() {
+  return (
+    <svg
+      width="26"
+      height="26"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="#2a9b6f"
+      strokeWidth={1.6}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21
+           12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+  );
+}
+
+/* ── Component ── */
+
+export default function MedicinesPage() {
   const navigate = useNavigate();
 
-  function handleFile(file) {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setImageUrl(url);
-    setLoading(true);
-    // Simulate OCR call — replace with real Google Vision API call
-    setTimeout(() => {
-      setDrugs(MOCK_OCR_RESULTS);
-      setLoading(false);
-      setStep(2);
-    }, 1500);
+  const [query, setQuery] = useState("");
+  const [activecat, setActivecat] = useState("All");
+  const [cart, setCart] = useState([]); // array of medicine ids
+  const [compareIds, setCompareIds] = useState([]); // max 3
+
+  /* Filtered list */
+  const filtered = useMemo(() => {
+    return MEDICINES.filter((m) => {
+      const matchesSearch =
+        m.name.toLowerCase().includes(query.toLowerCase()) ||
+        m.generic.toLowerCase().includes(query.toLowerCase());
+      const matchesCategory = activecat === "All" || m.category === activecat;
+      return matchesSearch && matchesCategory;
+    });
+  }, [query, activecat]);
+
+  /* ── Handlers ── */
+
+  function toggleCart(id) {
+    setCart((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   }
 
-  function removeDrug(id) {
-    setDrugs(drugs.filter((d) => d.id !== id));
+  function toggleCompare(id) {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) return prev; // cap at 3
+      return [...prev, id];
+    });
   }
 
-  function handleSearch() {
-    const query = drugs.map((d) => d.name).join(",");
-    navigate(`/search?q=${query}`);
+  function handleCompare() {
+    const query = compareIds.join(",");
+    navigate(`/compare?ids=${query}`);
   }
 
-  function stepState(n) {
-    if (n < step) return "done";
-    if (n === step) return "active";
-    return "idle";
+  function handleViewDetails(id) {
+    navigate(`/medicines/${id}`);
   }
+
+  /* ── Render ── */
 
   return (
-    <div style={s.page}>
+    <div className="medicines-page">
       {/* Header */}
-      <div style={s.header}>
-        <button style={s.backBtn} onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)}>
-          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#555" strokeWidth={2.2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+      <div className="medicines-header">
+        <button className="back-btn" onClick={() => navigate(-1)}>
+          <BackIcon />
         </button>
         <div>
-          <div style={s.headerTitle}>Upload Prescription</div>
-          <div style={s.headerSub}>We'll find your drugs automatically</div>
+          <div className="header-title">Medicines</div>
+          <div className="header-sub">Browse and compare drug prices</div>
         </div>
       </div>
 
-      {/* Steps indicator */}
-      <div style={s.stepsRow}>
-        {STEPS.map((label, i) => {
-          const n = i + 1;
-          const state = stepState(n);
-          return (
-            <div key={label} style={{ display: "flex", alignItems: "center", flex: 1 }}>
-              <div style={s.stepItem}>
-                <div style={s.stepCircle(state)}>
-                  {state === "done" ? "✓" : n}
-                </div>
-                <div style={s.stepLabel(state === "active")}>{label}</div>
-              </div>
-              {i < STEPS.length - 1 && (
-                <div style={s.stepLine(state === "done")} />
-              )}
-            </div>
-          );
-        })}
+      {/* Search bar */}
+      <div className="search-wrapper">
+        <div className="search-box">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search by name or generic…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
       </div>
 
-      <div style={s.section}>
+      {/* Category filter chips */}
+      <div className="filters-row">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            className={`filter-chip ${activecat === cat ? "active" : ""}`}
+            onClick={() => setActivecat(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
-        {/* ── Step 1: Upload ── */}
-        {step === 1 && (
-          <>
-            <div style={s.uploadBox} onClick={() => fileRef.current.click()}>
-              <div style={s.uploadIcon}>
-                <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <div style={s.uploadTitle}>Drop your prescription here</div>
-              <div style={s.uploadSub}>Tap to browse a file from your phone or computer</div>
+      {/* Results count */}
+      <div className="results-meta">
+        <span>{filtered.length}</span> medicine
+        {filtered.length !== 1 ? "s" : ""} found
+        {compareIds.length > 0 && ` · ${compareIds.length} selected to compare`}
+      </div>
+
+      {/* Medicine cards */}
+      <div className="medicines-list">
+        {filtered.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-state-icon">
+              <EmptyIcon />
             </div>
-
-            <div style={s.orRow}>
-              <div style={s.orLine} /> or <div style={s.orLine} />
+            <div className="empty-state-title">No medicines found</div>
+            <div className="empty-state-sub">
+              Try a different name or category filter.
             </div>
-
-            {/* Camera capture */}
-            <button style={s.btnCamera} onClick={() => cameraRef.current.click()}>
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <circle cx="12" cy="13" r="3" />
-              </svg>
-              Take a photo
-            </button>
-
-            {/* Gallery pick */}
-            <button style={s.btnGallery} onClick={() => fileRef.current.click()}>
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Choose from gallery
-            </button>
-
-            {/* Hidden inputs */}
-            <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }}
-              onChange={(e) => handleFile(e.target.files[0])} />
-            <input ref={cameraRef} type="file" accept="image/*" capture="environment" style={{ display: "none" }}
-              onChange={(e) => handleFile(e.target.files[0])} />
-          </>
-        )}
-
-        {/* ── Step 2: Review OCR results ── */}
-        {step === 2 && (
-          <>
-            {loading ? (
-              <div style={{ textAlign: "center", padding: "60px 0", color: "#2a9b6f", fontSize: "15px", fontWeight: 500 }}>
-                Reading prescription...
+          </div>
+        ) : (
+          filtered.map((med) => (
+            <div
+              key={med.id}
+              className="medicine-card"
+              onClick={() => handleViewDetails(med.id)}
+            >
+              {/* Icon */}
+              <div className="medicine-icon">
+                <PillIcon />
               </div>
-            ) : (
-              <>
-                <div style={s.previewBox}>
-                  {imageUrl
-                    ? <img src={imageUrl} alt="Prescription" style={s.previewImg} />
-                    : <div style={s.previewPlaceholder}><span style={{ fontSize: "13px", color: "#3a8a65" }}>Prescription preview</span></div>
-                  }
-                  <div style={s.ocrHeader}>
-                    <div style={s.ocrTitle}>Drugs found in prescription</div>
-                    <span style={s.ocrBadge}>{drugs.length} detected</span>
-                  </div>
-                  {drugs.map((drug, i) => (
-                    <div key={drug.id} style={{ ...s.drugExtract, borderBottom: i === drugs.length - 1 ? "none" : "1px solid #f5f5f5" }}>
-                      <div style={s.extractCheck}>
-                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={s.extractName}>{drug.name}</div>
-                        <div style={s.extractGeneric}>{drug.generic}</div>
-                      </div>
-                      <button style={s.extractRemove} onClick={() => remove药(drug.id)}>
-                        Remove
-                      </button>
-                    </div>
-                  ))}
+
+              {/* Info */}
+              <div className="medicine-info">
+                <div className="medicine-name">{med.name}</div>
+                <div className="medicine-generic">{med.generic}</div>
+                <div className="medicine-meta">
+                  <span
+                    className={
+                      med.inStock ? "badge-in-stock" : "badge-out-of-stock"
+                    }
+                  >
+                    {med.inStock ? "In stock" : "Out of stock"}
+                  </span>
+                  <span className="pharmacy-count">
+                    {med.pharmacies} pharmacies
+                  </span>
                 </div>
+              </div>
 
-                <div style={s.infoBox}>
-                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#7a5c00" strokeWidth={2} style={{ flexShrink: 0, marginTop: "1px" }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Please confirm the drug names above are correct before searching. OCR may occasionally misread handwriting.
+              {/* Price + actions */}
+              <div
+                className="medicine-right"
+                onClick={(e) => e.stopPropagation()} // prevent card nav on button clicks
+              >
+                <div>
+                  <div className="medicine-price">
+                    GH₵ {med.price.toFixed(2)}
+                  </div>
+                  <div className="medicine-price-sub">from lowest</div>
                 </div>
 
                 <button
-                  style={{ ...s.btnSearch, opacity: drugs.length === 0 ? 0.5 : 1 }}
-                  disabled={drugs.length === 0}
-                  onClick={handleSearch}
+                  className="btn-add-cart"
+                  onClick={() => toggleCart(med.id)}
+                  style={
+                    cart.includes(med.id)
+                      ? { background: "#0c503b" }
+                      : undefined
+                  }
                 >
-                  Search for {drugs.length > 0 ? `these ${drugs.length} drugs` : "drugs"}
+                  <PlusIcon />
+                  {cart.includes(med.id) ? "Added" : "Add"}
                 </button>
-              </>
-            )}
-          </>
+
+                <button
+                  className="btn-compare-clear"
+                  style={{
+                    fontSize: "11px",
+                    color: compareIds.includes(med.id) ? "#0c503b" : "#bbb",
+                    fontWeight: compareIds.includes(med.id) ? 600 : 400,
+                  }}
+                  onClick={() => toggleCompare(med.id)}
+                >
+                  {compareIds.includes(med.id) ? "✓ Compare" : "+ Compare"}
+                </button>
+              </div>
+            </div>
+          ))
         )}
       </div>
+
+      {/* Compare bar — appears when ≥2 medicines are selected */}
+      {compareIds.length >= 2 && (
+        <div className="compare-bar">
+          <span>{compareIds.length} medicines selected</span>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <button
+              className="btn-compare-clear"
+              onClick={() => setCompareIds([])}
+            >
+              Clear
+            </button>
+            <button className="btn-compare" onClick={handleCompare}>
+              Compare pharmacies
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,354 @@
+/* ─────────────────────────────────────────
+   PrescriptionPage.css
+   ───────────────────────────────────────── */
+
+/* Layout & Base */
+.prescription-page {
+  min-height: 100vh;
+  background: #f0f4f0;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.prescription-header {
+  background: white;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+}
+
+.header-sub {
+  font-size: 13px;
+  color: #888;
+}
+
+/* Step Indicator */
+.steps-row {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.step-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #e0e0e0;
+  margin-bottom: 18px;
+  transition: background 0.3s;
+}
+
+.step-line.done {
+  background: #2a9b6f;
+}
+
+.step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  background: #e0e0e0;
+  transition: background 0.3s;
+}
+
+.step-circle.active {
+  background: #0c503b;
+}
+
+.step-circle.done {
+  background: #2a9b6f;
+}
+
+.step-circle.idle {
+  color: #aaa;
+}
+
+.step-label {
+  font-size: 11px;
+  color: #888;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.step-label.active {
+  color: #0c503b;
+  font-weight: 600;
+}
+
+/* Section */
+.section {
+  padding: 0 20px;
+}
+
+/* Upload Step */
+.upload-box {
+  border: 2px dashed #b0d8c4;
+  border-radius: 20px;
+  background: white;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.upload-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: #e1f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.upload-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 6px;
+}
+
+.upload-sub {
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.or-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #bbb;
+  font-size: 13px;
+  margin: 16px 0;
+}
+
+.or-line {
+  flex: 1;
+  height: 1px;
+  background: #eee;
+}
+
+/* Buttons */
+.btn-camera {
+  width: 100%;
+  padding: 14px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.btn-gallery {
+  width: 100%;
+  padding: 13px;
+  background: white;
+  color: #2a9b6f;
+  border: 1.5px solid #2a9b6f;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-search {
+  width: 100%;
+  padding: 14px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-search:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Review Step */
+.preview-box {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.preview-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 160px;
+  background: #e1f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #3a8a65;
+}
+
+.ocr-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ocr-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.ocr-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: #e1f5ee;
+  color: #0c503b;
+  font-weight: 600;
+}
+
+.drug-extract {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.drug-extract:last-child {
+  border-bottom: none;
+}
+
+.extract-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #e1f5ee;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.extract-info {
+  flex: 1;
+}
+
+.extract-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+.extract-generic {
+  font-size: 12px;
+  color: #888;
+}
+
+.extract-remove {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #e53935;
+  background: #fdecea;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+/* Info Box */
+.info-box {
+  background: #fff8e1;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #7a5c00;
+  line-height: 1.5;
+}
+
+.info-box svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Loading */
+.loading-text {
+  text-align: center;
+  padding: 60px 0;
+  color: #2a9b6f;
+  font-size: 15px;
+  font-weight: 500;
+}
