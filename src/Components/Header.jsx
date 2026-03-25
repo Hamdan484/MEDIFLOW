@@ -10,6 +10,8 @@ const NAV_LINKS = [
   { to: "/prescription",         label: "Prescription" },
   { to: "/pharmacist/dashboard", label: "Seller"       },
   { to: "/profile",              label: "Profile"      },
+  { to: "/Buyer_Dashboard",       label: "Buyer"        },
+  {to: "/Customers", label: "Customers"    }, // --- IGNORE ---
 ];
 
 /* ── Icons ── */

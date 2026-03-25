@@ -194,7 +194,7 @@ export default function SignUp() {
               </div>
             </div>
 
-            <button type="submit" className="btn-primary">
+            <button type="button" className="btn-primary" onClick={() => navigate("/profile")} >
               {role === "pharmacist" ? "Submit for verification" : "Create account"}
             </button>
 

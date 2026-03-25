@@ -12,6 +12,7 @@ import Profile from "./pages/profile";
 import Medicines from "./pages/Medicines";
 import SellerDashboard from "./pages/Seller_Dashboard";
 import PrescriptionPage from "./pages/Prescription";
+import Customers from "./pages/Customers";
 
 /* ── Pages that show the Header + Sidebar shell ── */
 const SHELL_ROUTES = [
@@ -21,6 +22,9 @@ const SHELL_ROUTES = [
   "/profile",
   "/prescription",
   "/pharmacist/dashboard",
+  "/Buyer_Dashboard",
+  "/Seller_Dashboard",
+  "/Customers",
 ];
 
 function AppShell() {
@@ -78,6 +82,9 @@ function AppShell() {
             <Route path="/profile"               element={<Profile />} />
             <Route path="/prescription"          element={<PrescriptionPage />} />
             <Route path="/pharmacist/dashboard"  element={<SellerDashboard />} />
+              <Route path="/Buyer_Dashboard"       element={<BuyerDashboard />} />
+              <Route path="/Seller_Dashboard"      element={<SellerDashboard />} />
+              <Route path="/Customers" element={<Customers />} />
 
             {/* Catch-all → home */}
             <Route path="*" element={<Navigate to="/" replace />} />

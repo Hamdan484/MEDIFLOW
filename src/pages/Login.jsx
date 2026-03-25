@@ -50,7 +50,7 @@ export default function Login() {
         <div className="logo-icon">
           <HeartIcon />
         </div>
-        <div className="logo-name">Mediflow</div>
+        <div className="logo-name">Medi<span className="left-logo-accent">flow</span></div>
         <div className="logo-tag">Find drugs near you</div>
       </div>
 
@@ -82,7 +82,7 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="btn-primary">
+          <button type="button" className="btn-primary" onClick={() => navigate("/profile")}>
             Log in
           </button>
         </form>

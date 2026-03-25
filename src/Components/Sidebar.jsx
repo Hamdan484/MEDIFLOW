@@ -132,7 +132,7 @@ const NAV_ALERTS = [
 
 const NAV_ACCOUNT = [
   {
-    to: "/pharmacist/profile",
+    to: "/profile",
     label: "Profile",
     icon: (
       <svg
