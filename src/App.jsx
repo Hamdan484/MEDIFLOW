@@ -13,7 +13,7 @@ import Medicines from "./pages/Medicines";
 import SellerDashboard from "./pages/Seller_Dashboard";
 import PrescriptionPage from "./pages/Prescription";
 import Customers from "./pages/Customers";
-
+import Cart from "./pages/Cart";
 /* ── Pages that show the Header + Sidebar shell ── */
 const SHELL_ROUTES = [
   "/",
@@ -85,6 +85,7 @@ function AppShell() {
               <Route path="/Buyer_Dashboard"       element={<BuyerDashboard />} />
               <Route path="/Seller_Dashboard"      element={<SellerDashboard />} />
               <Route path="/Customers" element={<Customers />} />
+              <Route path="/cart" element={<Cart />} />
 
             {/* Catch-all → home */}
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -114,3 +115,6 @@ export default function App() {
     </>
   );
 }
+
+
+

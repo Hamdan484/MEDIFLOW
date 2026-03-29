@@ -1,8 +1,8 @@
 import { useNavigate, NavLink } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { getCartCount } from "../pages/Cart";
 import "../Styles/Header.css";
 
-/* ── Nav links config ── */
 const NAV_LINKS = [
   { to: "/",                     label: "Home"         },
   { to: "/medicines",            label: "Medicines"    },
@@ -10,11 +10,9 @@ const NAV_LINKS = [
   { to: "/prescription",         label: "Prescription" },
   { to: "/pharmacist/dashboard", label: "Seller"       },
   { to: "/profile",              label: "Profile"      },
-  { to: "/Buyer_Dashboard",       label: "Buyer"        },
-  {to: "/Customers", label: "Customers"    }, // --- IGNORE ---
+  { to: "/Buyer_Dashboard",      label: "Buyer"        },
+  { to: "/Customers",            label: "Customers"    },
 ];
-
-/* ── Icons ── */
 
 function MenuIcon() {
   return (
@@ -35,7 +33,14 @@ function BellIcon() {
   );
 }
 
-/* ── Helpers ── */
+function CartIcon() {
+  return (
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#555" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+  );
+}
 
 function getInitials(name) {
   return name
@@ -46,11 +51,10 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-/* ── Component ── */
-
 export default function Header({ onMenuClick, pharmacyName = "HP", hasNotif = true }) {
   const navigate = useNavigate();
   const { logoutPharmacist } = useAuthStore();
+  const cartCount = getCartCount();
 
   return (
     <header className="app-header">
@@ -74,23 +78,35 @@ export default function Header({ onMenuClick, pharmacyName = "HP", hasNotif = tr
             key={to}
             to={to}
             end={to === "/"}
-            className={({ isActive }) => `header-nav-link ${isActive ? "active" : ""}`}
+            className={({ isActive }) =>
+              `header-nav-link ${isActive ? "active" : ""}`
+            }
           >
             {label}
           </NavLink>
         ))}
       </nav>
 
-      {/* Right: notifications + avatar */}
+      {/* Right: cart + notifications + avatar */}
       <div className="header-right">
+
+        {/* Cart */}
+        <button className="cart-btn" onClick={() => navigate("/cart")}>
+          <CartIcon />
+          {cartCount > 0 && <div className="cart-dot" />}
+        </button>
+
+        {/* Notifications */}
         <button className="notif-btn" onClick={() => navigate("/notifications")}>
           <BellIcon />
           {hasNotif && <div className="notif-dot" />}
         </button>
 
+        {/* Avatar */}
         <button className="avatar-btn" onClick={() => navigate("/profile")}>
           {getInitials(pharmacyName)}
         </button>
+
       </div>
 
     </header>

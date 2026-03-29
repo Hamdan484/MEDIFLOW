@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Styles/Buyer_Dashboard.css";
+import { addToCart } from "./Cart";
 
 /* ── Mock data — replace with API call ── */
 const CATEGORIES = [

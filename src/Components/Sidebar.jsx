@@ -3,6 +3,16 @@ import { useAuthStore } from "../store/authStore";
 import "../Styles/Sidebar.css";
 
 /* ── Nav config ── */
+const NAV_LINKS = [
+  { to: "/",                     label: "Home"         },
+  { to: "/medicines",            label: "Medicines"    },
+  { to: "/search",               label: "Search"       },
+  { to: "/prescription",         label: "Prescription" },
+  { to: "/pharmacist/dashboard", label: "Seller"       },
+  { to: "/profile",              label: "Profile"      },
+  { to: "/Buyer_Dashboard",       label: "Buyer"        },
+  {to: "/Customers", label: "Customers"    }, // --- IGNORE ---
+];
 
 const NAV_MAIN = [
   {
@@ -46,7 +56,7 @@ const NAV_MAIN = [
     ),
   },
   {
-    to: "/pharmacist/customers",
+    to: "/Customers",
     label: "Customers",
     icon: (
       <svg

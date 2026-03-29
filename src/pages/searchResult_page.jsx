@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../Styles/SearchResultsPage.css";
+import { addToCart } from "./Cart";
 
 /* ── Mock data — replace with API call ── */
 const RESULTS = [

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Styles/Medicines.css";
-
+import { addToCart } from "./Cart";
 /* ── Mock data — replace with API call ── */
 const MEDICINES = [
   {
@@ -221,11 +221,25 @@ export default function MedicinesPage() {
 
   /* ── Handlers ── */
 
-  function toggleCart(id) {
-    setCart((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+  function toggleCart(med) {
+  const alreadyAdded = cart.includes(med.id);
+
+  if (alreadyAdded) {
+    // remove from local state
+    setCart((prev) => prev.filter((i) => i !== med.id));
+  } else {
+    // add to local state AND push to cart page
+    setCart((prev) => [...prev, med.id]);
+    addToCart({
+      id: med.id,
+      name: med.name,
+      unit: med.unit || "per pack",
+      price: med.price,
+      pharmacyId: med.pharmacyId || "p1",
+      pharmacyName: med.pharmacyName || "Pharmacy",
+    });
   }
+}
 
   function toggleCompare(id) {
     setCompareIds((prev) => {
@@ -333,6 +347,7 @@ export default function MedicinesPage() {
                   </span>
                 </div>
               </div>
+              
 
               {/* Price + actions */}
               <div
@@ -346,18 +361,18 @@ export default function MedicinesPage() {
                   <div className="medicine-price-sub">from lowest</div>
                 </div>
 
-                <button
-                  className="btn-add-cart"
-                  onClick={() => toggleCart(med.id)}
-                  style={
-                    cart.includes(med.id)
-                      ? { background: "#0c503b" }
-                      : undefined
-                  }
-                >
-                  <PlusIcon />
-                  {cart.includes(med.id) ? "Added" : "Add"}
-                </button>
+               <button
+  className="btn-add-cart"
+  onClick={() => toggleCart(med)}
+  style={
+    cart.includes(med.id)
+      ? { background: "#0c503b" }
+      : undefined
+  }
+>
+  <PlusIcon />
+  {cart.includes(med.id) ? "Added" : "Add"}
+</button>
 
                 <button
                   className="btn-compare-clear"

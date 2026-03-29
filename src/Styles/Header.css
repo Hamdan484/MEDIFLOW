@@ -140,6 +140,29 @@
 
 .avatar-btn:hover { background: #c8eddf; }
 
+.cart-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #f5f5f5;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.cart-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e53935;
+  border: 2px solid white;
+}
 /* ── Hide nav links on small screens (sidebar handles nav) ── */
 @media (max-width: 768px) {
   .header-nav { display: none; }
