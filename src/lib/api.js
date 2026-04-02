@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
+// Use Live environment URL from Vercel if available, otherwise hit local Python Server
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
 });
 
 // Automatically intercept every API request and attach the JWT token if the user is logged in
