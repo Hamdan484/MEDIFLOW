@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import api from "../lib/api";
 import "../Styles/Login.css";
 
 /* ── Icons ── */
@@ -30,12 +32,36 @@ function HeartIcon() {
 export default function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuthStore();
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
-    // TODO: call your auth API here
-    navigate("/");
+    setErrorMsg("");
+
+    try {
+      const response = await api.post("/auth/login", {
+        phone: phone,
+        password: password
+      });
+      
+      const { access_token, role, full_name } = response.data;
+      
+      login({ name: full_name, phone }, role, access_token);
+      
+      // Auto-route based on the verified role from the DB
+      if (role === "seller") navigate("/seller/dashboard");
+      else if (role === "admin") navigate("/admin/dashboard");
+      else navigate("/");
+
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setErrorMsg("Invalid phone number or password. Please try again.");
+      } else {
+        setErrorMsg("Failed to connect to the server.");
+      }
+    }
   }
 
   function handleOtp() {
@@ -82,7 +108,9 @@ export default function Login() {
             />
           </div>
 
-          <button type="button" className="btn-primary" onClick={() => navigate("/profile")}>
+          {errorMsg && <div style={{ color: "red", fontSize: "14px", marginBottom: "16px", fontWeight: "500" }}>{errorMsg}</div>}
+
+          <button type="submit" className="btn-primary">
             Log in
           </button>
         </form>

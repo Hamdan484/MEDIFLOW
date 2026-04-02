@@ -164,6 +164,11 @@
   border: 2px solid white;
 }
 /* ── Hide nav links on small screens (sidebar handles nav) ── */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .header-nav { display: none; }
+}
+
+/* ── Hide entire header on large screens (sidebar handles everything) ── */
+@media (min-width: 768px) {
+  .app-header { display: none !important; }
 }
