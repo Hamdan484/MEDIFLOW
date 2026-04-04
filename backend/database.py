@@ -1,20 +1,24 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 import urllib.parse
 
-# We assume standard localhost XAMPP/MySQL Workbench setup: root with no password or 'password'
-# If your MySQL has a password, please insert it below between the quotes!
-DB_USER = "root"
-DB_PASS = "" 
-DB_HOST = "localhost"
-DB_NAME = "mediflow_db"
+# If MYSQL_URL is set in the environment (e.g., from Railway), use it.
+# Otherwise, fall back to localhost credentials.
+DATABASE_URL = os.environ.get("MYSQL_URL") or os.environ.get("DATABASE_URL")
 
-encoded_pass = urllib.parse.quote_plus(DB_PASS) if DB_PASS else ""
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{encoded_pass}@{DB_HOST}/{DB_NAME}"
+if not DATABASE_URL:
+    DB_USER = "root"
+    DB_PASS = "" 
+    DB_HOST = "localhost"
+    DB_NAME = "mediflow_db"
+
+    encoded_pass = urllib.parse.quote_plus(DB_PASS) if DB_PASS else ""
+    DATABASE_URL = f"mysql+pymysql://{DB_USER}:{encoded_pass}@{DB_HOST}/{DB_NAME}"
 
 try:
-    engine = create_engine(SQLALCHEMY_DATABASE_URL)
+    engine = create_engine(DATABASE_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 except Exception as e:
     engine = None
