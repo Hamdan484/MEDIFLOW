@@ -6,3 +6,5 @@ passlib[bcrypt]
 pyjwt
 pydantic
 python-dotenv
+cryptography
+python-multipart

@@ -3,13 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import auth
 import models
 from database import engine
-
-# Auto-create tables if they don't exist
-try:
-    if engine:
-        models.Base.metadata.create_all(bind=engine)
-except Exception as e:
-    print("Warning: Skipping table creation because DB is unreachable. Did you create mediflow_db in MySQL?")
+import os
 
 app = FastAPI(title="Mediflow API")
 
@@ -19,9 +13,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173", 
         "http://localhost:3000",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
     ], 
-    allow_origin_regex="https://.*",
+    allow_origin_regex=r"https://.*\.vercel\.app|https://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,6 +23,21 @@ app.add_middleware(
 
 app.include_router(auth.router)
 
+@app.on_event("startup")
+def startup_event():
+    port = os.environ.get("PORT", "8000")
+    print(f"[STARTUP] Mediflow API starting on port {port}")
+    # Auto-create tables if they don't exist
+    try:
+        if engine:
+            models.Base.metadata.create_all(bind=engine)
+            print("[STARTUP] Database tables created/verified successfully")
+        else:
+            print("[STARTUP] WARNING: No database engine available - tables not created")
+    except Exception as e:
+        print(f"[STARTUP] WARNING: Skipping table creation: {e}")
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Mediflow Python Backend!"}
+
