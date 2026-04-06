@@ -10,7 +10,12 @@ app = FastAPI(title="Mediflow API")
 # Allow React frontend to consume the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://mediflow-vdbm-lggof3xh1-hamdan484s-projects.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app", # Matches any Vercel preview/production URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
