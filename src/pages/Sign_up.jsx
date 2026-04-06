@@ -73,27 +73,11 @@ export default function SignUp() {
     const userRole = role === "pharmacist" ? "seller" : "buyer";
     
     try {
-      // 1. Register the user
-      await api.post("/auth/register", {
-        full_name: form.firstName ? `${form.firstName} ${form.lastName}` : "New User",
-        phone: form.phone,
-        password: form.password,
-        role: userRole,
-        pharmacy_name: form.pharmacyName || null,
-        license_number: form.licenseNumber || null,
-        location: form.location || null
-      });
-
-      // 2. Auto-login immediately
-      const loginResponse = await api.post("/auth/login", {
-        phone: form.phone,
-        password: form.password
-      });
-
-      const { access_token, full_name } = loginResponse.data;
-
-      // 3. Log into global store
-      login({ name: full_name, phone: form.phone }, userRole, access_token);
+      // Mock successful registration
+      console.log("Mock registration for:", form.phone);
+      
+      // Log into global store with mock data
+      login({ name: `${form.firstName} ${form.lastName}`, phone: form.phone }, userRole, "mock-jwt-token");
 
       // Route them to their proper dashboard
       if (userRole === "seller") {
@@ -103,11 +87,7 @@ export default function SignUp() {
       }
 
     } catch (error) {
-       if (error.response && error.response.data && error.response.data.detail) {
-         setErrorMsg(error.response.data.detail);
-       } else {
-         setErrorMsg("Failed to register. Please check your connection.");
-       }
+       setErrorMsg("An unexpected error occurred.");
     }
   }
 

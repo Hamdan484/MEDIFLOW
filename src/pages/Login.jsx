@@ -41,26 +41,19 @@ export default function Login() {
     setErrorMsg("");
 
     try {
-      const response = await api.post("/auth/login", {
-        phone: phone,
-        password: password
-      });
+      // Mock successful login
+      console.log("Mock login for:", phone);
       
-      const { access_token, role, full_name } = response.data;
+      // Default to 'buyer' for demo, or 'seller' depending on what we want to show
+      const mockRole = phone.includes("123") ? "seller" : "buyer";
       
-      login({ name: full_name, phone }, role, access_token);
+      login({ name: "Demo User", phone }, mockRole, "mock-jwt-token");
       
-      // Auto-route based on the verified role from the DB
-      if (role === "seller") navigate("/seller/dashboard");
-      else if (role === "admin") navigate("/admin/dashboard");
+      if (mockRole === "seller") navigate("/seller/dashboard");
       else navigate("/");
 
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setErrorMsg("Invalid phone number or password. Please try again.");
-      } else {
-        setErrorMsg("Failed to connect to the server.");
-      }
+      setErrorMsg("Failed to connect to the server.");
     }
   }
 
