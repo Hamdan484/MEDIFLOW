@@ -1,0 +1,20 @@
+node_modules
+dist
+.git
+.env
+.env.*
+! .env.production
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+lib/
+bin/
+include/
+obj/
+build/
+*.bak
+~$*
