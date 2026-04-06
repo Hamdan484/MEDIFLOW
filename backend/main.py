@@ -15,7 +15,7 @@ app.add_middleware(
         "http://localhost:3000",
         "https://mediflow-vdbm-lggof3xh1-hamdan484s-projects.vercel.app",
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app", # Matches any Vercel preview/production URL
+    allow_origin_regex=r"https://.*\.vercel\.app", # Matches any Vercel URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,18 +26,19 @@ app.include_router(auth.router)
 @app.on_event("startup")
 def startup_event():
     port = os.environ.get("PORT", "8000")
-    print(f"[STARTUP] Mediflow API starting on port {port}")
+    print(f"🚀 [STARTUP] Mediflow API starting on port {port}")
+    
     # Auto-create tables if they don't exist
     try:
         if engine:
             models.Base.metadata.create_all(bind=engine)
-            print("[STARTUP] Database tables created/verified successfully")
+            print("✅ [STARTUP] Database tables created/verified successfully")
         else:
-            print("[STARTUP] WARNING: No database engine available - tables not created")
+            print("⚠️ [STARTUP] WARNING: No database engine available - tables not created")
     except Exception as e:
-        print(f"[STARTUP] WARNING: Skipping table creation: {e}")
+        print(f"❌ [STARTUP] ERROR: Skipping table creation: {e}")
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Mediflow Python Backend!"}
+    return {"message": "Welcome to the Mediflow Python Backend!", "status": "online"}
 
