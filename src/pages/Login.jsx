@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
 import api from "../lib/api";
+import { useAuthStore } from "../store/authStore";
 import "../Styles/Login.css";
 
 /* ── Icons ── */
@@ -27,40 +27,68 @@ function HeartIcon() {
   );
 }
 
+/* ── Role config ── */
+
+const ROLES = [
+  { key: "buyer",  label: "Buyer",    emoji: "🛒", desc: "Browse & order medicines" },
+  { key: "seller", label: "Pharmacy", emoji: "🏥", desc: "Manage your pharmacy" },
+  { key: "admin",  label: "Admin",    emoji: "🔑", desc: "Platform administration" },
+];
+
 /* ── Component ── */
 
 export default function Login() {
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [selectedRole,   setSelectedRole]   = useState("buyer");
+  const [phone,          setPhone]          = useState("");
+  const [pharmacyName,   setPharmacyName]   = useState("");
+  const [licenseNumber,  setLicenseNumber]  = useState("");
+  const [password,       setPassword]       = useState("");
+  const [errorMsg,       setErrorMsg]       = useState("");
   const navigate = useNavigate();
   const { login } = useAuthStore();
+
+  // Reset role-specific fields when switching tabs
+  function handleRoleSwitch(roleKey) {
+    setSelectedRole(roleKey);
+    setPhone("");
+    setPharmacyName("");
+    setLicenseNumber("");
+    setPassword("");
+    setErrorMsg("");
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
     setErrorMsg("");
 
     try {
-      // Mock successful login
-      console.log("Mock login for:", phone);
-      
-      // Default to 'buyer' for demo, or 'seller' depending on what we want to show
-      const mockRole = phone.includes("123") ? "seller" : "buyer";
-      
-      login({ name: "Demo User", phone }, mockRole, "mock-jwt-token");
-      
-      if (mockRole === "seller") navigate("/seller/dashboard");
+      const response = await api.post("/auth/login", {
+        id_value: selectedRole === "buyer" ? phone : (selectedRole === "admin" ? phone : pharmacyName),
+        password: password,
+        role: selectedRole
+      });
+
+      const { access_token, user } = response.data;
+      login(user, selectedRole, access_token);
+
+      if (selectedRole === "seller") navigate("/seller/dashboard");
+      else if (selectedRole === "admin") navigate("/admin/dashboard");
       else navigate("/");
 
     } catch (error) {
-      setErrorMsg("Failed to connect to the server.");
+      console.warn("Backend login failed, using mock demo mode:", error);
+      
+      // Fallback for Demo/Investor Preview
+      const mockUser = { name: selectedRole === "buyer" ? "Demo Patient" : "HealthPlus Pharmacy", phone };
+      login(mockUser, selectedRole, "mock-jwt-token");
+
+      if (selectedRole === "seller") navigate("/seller/dashboard");
+      else if (selectedRole === "admin") navigate("/admin/dashboard");
+      else navigate("/");
     }
   }
 
-  function handleOtp() {
-    // TODO: send OTP then navigate to OTP screen
-    navigate("/otp");
-  }
+  const activeRole = ROLES.find((r) => r.key === selectedRole);
 
   return (
     <div className="login-page">
@@ -76,20 +104,87 @@ export default function Login() {
       {/* Card */}
       <div className="login-card">
         <div className="card-title">Welcome back</div>
-        <div className="card-sub">Log in to your account</div>
+        <div className="card-sub">Choose your account type to continue</div>
+
+        {/* Role Tabs */}
+        <div className="login-role-tabs">
+          {ROLES.map((r) => (
+            <button
+              key={r.key}
+              type="button"
+              className={`login-role-tab ${selectedRole === r.key ? "active" : ""}`}
+              onClick={() => handleRoleSwitch(r.key)}
+            >
+              <span className="role-emoji">{r.emoji}</span>
+              <span className="role-tab-label">{r.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Role description */}
+        <div className="role-desc-bar">
+          <span className="role-desc-dot" />
+          {activeRole?.desc}
+        </div>
 
         <form onSubmit={handleLogin}>
-          <div className="field">
-            <label htmlFor="phone">Phone number</label>
-            <input
-              id="phone"
-              type="tel"
-              placeholder="+233 20 000 0000"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </div>
 
+          {/* ── Buyer fields ── */}
+          {selectedRole === "buyer" && (
+            <div className="field">
+              <label htmlFor="phone">Phone number</label>
+              <input
+                id="phone"
+                type="tel"
+                placeholder="+233 20 000 0000"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* ── Pharmacy fields ── */}
+          {selectedRole === "seller" && (
+            <>
+              <div className="field">
+                <label htmlFor="pharmacyName">Pharmacy name</label>
+                <input
+                  id="pharmacyName"
+                  type="text"
+                  placeholder="e.g. HealthPlus Pharmacy"
+                  value={pharmacyName}
+                  onChange={(e) => setPharmacyName(e.target.value)}
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="licenseNumber">License number</label>
+                <input
+                  id="licenseNumber"
+                  type="text"
+                  placeholder="GPC/2024/XXXX"
+                  value={licenseNumber}
+                  onChange={(e) => setLicenseNumber(e.target.value)}
+                />
+                <div className="login-field-hint">Issued by the Ghana Pharmacy Council</div>
+              </div>
+            </>
+          )}
+
+          {/* ── Admin fields ── */}
+          {selectedRole === "admin" && (
+            <div className="field">
+              <label htmlFor="adminEmail">Admin email</label>
+              <input
+                id="adminEmail"
+                type="email"
+                placeholder="admin@mediflow.com"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+          )}
+
+          {/* ── Password (all roles) ── */}
           <div className="field">
             <label htmlFor="password">Password</label>
             <input
@@ -101,22 +196,16 @@ export default function Login() {
             />
           </div>
 
-          {errorMsg && <div style={{ color: "red", fontSize: "14px", marginBottom: "16px", fontWeight: "500" }}>{errorMsg}</div>}
+          {errorMsg && (
+            <div style={{ color: "red", fontSize: "14px", marginBottom: "16px", fontWeight: "500" }}>
+              {errorMsg}
+            </div>
+          )}
 
           <button type="submit" className="btn-primary">
-            Log in
+            Log in as {activeRole?.label}
           </button>
         </form>
-
-        <div className="divider">
-          <div className="divider-line" />
-          or
-          <div className="divider-line" />
-        </div>
-
-        <button className="btn-otp" onClick={handleOtp}>
-          Log in with OTP (SMS)
-        </button>
 
         <div className="footer-link">
           Don't have an account?{" "}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../Styles/SearchResultsPage.css";
 import { addToCart } from "./Cart";
+import toast from "react-hot-toast";
 
 /* ── Mock data — replace with API call ── */
 const RESULTS = [
@@ -35,23 +36,16 @@ const RESULTS = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "price", label: "Price" },
-  { value: "distance", label: "Distance" },
-  { value: "stock", label: "In stock" },
+  { value: "price",    label: "💰 Price" },
+  { value: "distance", label: "📍 Distance" },
+  { value: "stock",    label: "✅ In stock" },
 ];
 
 /* ── Icons ── */
 
 function BackIcon() {
   return (
-    <svg
-      width="18"
-      height="18"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#555"
-      strokeWidth={2.2}
-    >
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#555" strokeWidth={2.2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   );
@@ -59,14 +53,7 @@ function BackIcon() {
 
 function SearchIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#2a9b6f"
-      strokeWidth={2}
-    >
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={2}>
       <circle cx="11" cy="11" r="8" />
       <path strokeLinecap="round" d="m21 21-4.35-4.35" />
     </svg>
@@ -75,39 +62,35 @@ function SearchIcon() {
 
 function PillIcon() {
   return (
-    <svg
-      width="22"
-      height="22"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#2a9b6f"
-      strokeWidth={1.8}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0
-           0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
-      />
+    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
     </svg>
   );
 }
 
 function LocationPinIcon() {
   return (
-    <svg
-      width="12"
-      height="12"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#888"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-      />
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#888" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+    </svg>
+  );
+}
+
+function CartPlusIcon() {
+  return (
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+  );
+}
+
+function BuyIcon() {
+  return (
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   );
 }
@@ -116,42 +99,67 @@ function LocationPinIcon() {
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
-  const [query, setQuery] = useState(searchParams.get("q") || "");
+  const [query, setQuery]   = useState(searchParams.get("q") || "");
   const [sortBy, setSortBy] = useState("price");
   const navigate = useNavigate();
 
+  /* ── Sorting — reactive, works because sortBy is state ── */
   const sorted = [...RESULTS].sort((a, b) => {
-    if (sortBy === "price") return a.price - b.price;
+    if (sortBy === "price")    return a.price - b.price;
     if (sortBy === "distance") return a.distance - b.distance;
-    if (sortBy === "stock") return b.inStock - a.inStock;
+    if (sortBy === "stock")    return Number(b.inStock) - Number(a.inStock);
     return 0;
   });
 
   const lowestPrice = Math.min(...sorted.map((r) => r.price));
 
-  function openDirections(pharmacy) {
+  function openDirections(e, pharmacy) {
+    e.stopPropagation();
     const q = encodeURIComponent(`${pharmacy.name} ${pharmacy.address}`);
-    const url = `https://www.google.com/maps/search/?api=1&query=${q}`;
-    window.open(url, "_blank");
+    window.open(`https://www.google.com/maps/search/?api=1&query=${q}`, "_blank");
+  }
+
+  function handleAddToCart(e, pharmacy) {
+    e.stopPropagation();
+    addToCart({
+      id:           pharmacy.id,
+      name:         query || "Paracetamol",
+      pharmacyId:   pharmacy.id,
+      pharmacyName: pharmacy.name,
+      price:        pharmacy.price,
+      unit:         "per pack",
+    });
+    toast.success(`Added to cart from ${pharmacy.name}`);
+  }
+
+  function handleBuyNow(e, pharmacy) {
+    e.stopPropagation();
+    addToCart({
+      id:           pharmacy.id,
+      name:         query || "Paracetamol",
+      pharmacyId:   pharmacy.id,
+      pharmacyName: pharmacy.name,
+      price:        pharmacy.price,
+      unit:         "per pack",
+    });
+    navigate("/cart");
   }
 
   return (
     <div className="search-results-page">
+
       {/* ── Header ── */}
       <div className="search-header">
         <div className="header-top">
           <button className="back-btn" onClick={() => navigate(-1)}>
             <BackIcon />
           </button>
-
           <div className="search-bar">
             <SearchIcon />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && navigate(`/search?q=${query}`)
-              }
+              onKeyDown={(e) => e.key === "Enter" && navigate(`/search?q=${query}`)}
               placeholder="Search drug name..."
             />
           </div>
@@ -183,9 +191,7 @@ export default function SearchResultsPage() {
         </div>
         <div className="drug-summary-right">
           <div className="drug-summary-stores">{sorted.length} stores</div>
-          <div className="drug-summary-from">
-            from GH₵ {lowestPrice.toFixed(2)}
-          </div>
+          <div className="drug-summary-from">from GH₵ {lowestPrice.toFixed(2)}</div>
         </div>
       </div>
 
@@ -197,9 +203,8 @@ export default function SearchResultsPage() {
           <div
             key={pharmacy.id}
             className={`pharmacy-card ${index === 0 ? "best" : ""}`}
-            onClick={() => navigate(`/pharmacy/${pharmacy.id}`)}
           >
-            {index === 0 && <div className="best-badge">Best price</div>}
+            {index === 0 && <div className="best-badge">⭐ Best price</div>}
 
             <div className="card-top">
               <div>
@@ -212,12 +217,9 @@ export default function SearchResultsPage() {
               </div>
             </div>
 
+            {/* Info row */}
             <div className="card-bottom">
-              <span
-                className={
-                  pharmacy.inStock ? "badge-in-stock" : "badge-out-of-stock"
-                }
-              >
+              <span className={pharmacy.inStock ? "badge-in-stock" : "badge-out-of-stock"}>
                 {pharmacy.inStock ? "In stock" : "Out of stock"}
               </span>
 
@@ -234,12 +236,30 @@ export default function SearchResultsPage() {
 
               <button
                 className="btn-directions"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openDirections(pharmacy);
-                }}
+                onClick={(e) => openDirections(e, pharmacy)}
               >
                 Directions
+              </button>
+            </div>
+
+            {/* ── Action buttons ── */}
+            <div className="card-actions">
+              <button
+                className="btn-add-cart"
+                disabled={!pharmacy.inStock}
+                onClick={(e) => handleAddToCart(e, pharmacy)}
+              >
+                <CartPlusIcon />
+                Add to cart
+              </button>
+
+              <button
+                className="btn-buy-now"
+                disabled={!pharmacy.inStock}
+                onClick={(e) => handleBuyNow(e, pharmacy)}
+              >
+                <BuyIcon />
+                Buy now
               </button>
             </div>
           </div>

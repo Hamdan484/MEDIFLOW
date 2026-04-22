@@ -16,7 +16,14 @@ import Cart from "./pages/Cart";
 
 // Seller Pages
 import SellerDashboard from "./pages/Seller_Dashboard";
+import SellerInventory from "./pages/Seller_Inventory";
+import SellerSales from "./pages/Seller_Sales";
+import SellerLowStock from "./pages/Seller_LowStock";
+import SellerNotifications from "./pages/Seller_Notifications";
 import Customers from "./pages/Customers";
+
+// Admin Pages
+import AdminDashboard from "./pages/Admin_Dashboard";
 
 export default function App() {
   return (
@@ -42,20 +49,20 @@ export default function App() {
         <Route element={<ProtectedRoutes allowedRoles={["seller"]} />}>
           <Route element={<MainLayout />}>
             <Route path="/seller/dashboard" element={<SellerDashboard />} />
-            <Route path="/seller/inventory" element={<div style={{padding: '24px'}}><h2>Inventory Management</h2><p>Coming Soon</p></div>} />
+            <Route path="/seller/inventory" element={<SellerInventory />} />
             <Route path="/seller/customers" element={<Customers />} />
-            <Route path="/seller/sales" element={<div style={{padding: '24px'}}><h2>Sales Tracking</h2><p>Coming Soon</p></div>} />
-            <Route path="/seller/low-stock" element={<div style={{padding: '24px'}}><h2>Low Stock Alerts</h2><p>Coming Soon</p></div>} />
-            <Route path="/seller/notifications" element={<div style={{padding: '24px'}}><h2>Notifications</h2></div>} />
+            <Route path="/seller/sales" element={<SellerSales />} />
+            <Route path="/seller/low-stock" element={<SellerLowStock />} />
+            <Route path="/seller/notifications" element={<SellerNotifications />} />
           </Route>
         </Route>
 
         {/* Admin Routes (Protected) */}
         <Route element={<ProtectedRoutes allowedRoles={["admin"]} />}>
           <Route element={<MainLayout />}>
-            <Route path="/admin/dashboard" element={<div style={{padding: '24px'}}><h1>Super Admin Dashboard</h1><p>Platform statistics and controls will live here.</p></div>} />
-            <Route path="/admin/pharmacies" element={<div style={{padding: '24px'}}><h2>Pharmacy Approvals</h2><p>Coming Soon</p></div>} />
-            <Route path="/admin/users" element={<div style={{padding: '24px'}}><h2>User Management</h2><p>Coming Soon</p></div>} />
+            <Route path="/admin/dashboard" element={<AdminDashboard key="admin-dash" defaultTab="pharmacies" />} />
+            <Route path="/admin/pharmacies" element={<AdminDashboard key="admin-pharm" defaultTab="pharmacies" />} />
+            <Route path="/admin/users" element={<AdminDashboard key="admin-users" defaultTab="buyers" />} />
           </Route>
         </Route>
 

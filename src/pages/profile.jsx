@@ -1,4 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { addToCart } from "./Cart";
+import toast from "react-hot-toast";
 import "../Styles/profile.css";
 
 const PHARMACY = {
@@ -48,14 +50,7 @@ const PHARMACY = {
 
 function BackIcon() {
   return (
-    <svg
-      width="18"
-      height="18"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#555"
-      strokeWidth={2.2}
-    >
+    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#555" strokeWidth={2.2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
     </svg>
   );
@@ -63,21 +58,8 @@ function BackIcon() {
 
 function BuildingIcon() {
   return (
-    <svg
-      width="26"
-      height="26"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#2a9b6f"
-      strokeWidth={1.8}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9
-           0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1
-           1 0 011 1v5m-4 0h4"
-      />
+    <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
     </svg>
   );
 }
@@ -92,84 +74,32 @@ function VerifiedIcon() {
 
 function DirectionsIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="white"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0
-           011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0
-           0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-      />
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
     </svg>
   );
 }
 
 function PhoneIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#2a9b6f"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0
-           01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1
-           1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2
-           2h-1C9.716 21 3 14.284 3 6V5z"
-      />
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
     </svg>
   );
 }
 
 function PillIcon() {
   return (
-    <svg
-      width="20"
-      height="20"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#2a9b6f"
-      strokeWidth={1.8}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2
-           2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"
-      />
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
     </svg>
   );
 }
 
 function ShieldIcon() {
   return (
-    <svg
-      width="13"
-      height="13"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="#aaa"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955
-           11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29
-           9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-      />
+    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#aaa" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
     </svg>
   );
 }
@@ -188,6 +118,38 @@ export default function PharmacyProfilePage() {
 
   function callPharmacy() {
     window.location.href = `tel:${pharmacy.phone}`;
+  }
+
+  function handleDrugClick(drug) {
+    navigate(`/search?q=${encodeURIComponent(drug.name)}`);
+  }
+
+  function handleAddToCart(e, drug) {
+    e.stopPropagation();
+    if (!drug.inStock) return;
+    addToCart({
+      id: drug.id,
+      name: drug.name,
+      unit: drug.unit,
+      price: drug.price,
+      pharmacyId: pharmacy.id,
+      pharmacyName: pharmacy.name,
+    });
+    toast.success(`Added ${drug.name} to cart`);
+  }
+
+  function handleBuyNow(e, drug) {
+    e.stopPropagation();
+    if (!drug.inStock) return;
+    addToCart({
+      id: drug.id,
+      name: drug.name,
+      unit: drug.unit,
+      price: drug.price,
+      pharmacyId: pharmacy.id,
+      pharmacyName: pharmacy.name,
+    });
+    navigate("/cart");
   }
 
   return (
@@ -256,25 +218,39 @@ export default function PharmacyProfilePage() {
         <div className="section-title">Available drugs</div>
 
         {pharmacy.drugs.map((drug) => (
-          <div key={drug.id} className="drug-row">
+          <div key={drug.id} className="drug-row" onClick={() => handleDrugClick(drug)}>
             <div className="drug-icon">
               <PillIcon />
             </div>
 
-            <div>
+            <div className="drug-info">
               <div className="drug-name">{drug.name}</div>
               <div className="drug-unit">{drug.unit}</div>
+              <div className="drug-price-mobile">GH₵ {drug.price.toFixed(2)}</div>
             </div>
 
             <div className="drug-right">
-              <div className="drug-price">GH₵ {drug.price.toFixed(2)}</div>
-              <span
-                className={
-                  drug.inStock ? "badge-in-stock" : "badge-out-of-stock"
-                }
-              >
+              <div className="drug-price-desktop">GH₵ {drug.price.toFixed(2)}</div>
+              <span className={drug.inStock ? "badge-in-stock" : "badge-out-of-stock"}>
                 {drug.inStock ? "In stock" : "Out of stock"}
               </span>
+              
+              <div className="drug-actions">
+                <button 
+                  className="btn-add-mini" 
+                  disabled={!drug.inStock}
+                  onClick={(e) => handleAddToCart(e, drug)}
+                >
+                  Add
+                </button>
+                <button 
+                  className="btn-buy-mini" 
+                  disabled={!drug.inStock}
+                  onClick={(e) => handleBuyNow(e, drug)}
+                >
+                  Buy
+                </button>
+              </div>
             </div>
           </div>
         ))}

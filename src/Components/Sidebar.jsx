@@ -5,17 +5,28 @@ import "../Styles/Sidebar.css";
 
 /* ── Icons ── */
 
-function CloseIcon() {
+function HeartIcon() {
   return (
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#555" strokeWidth={2.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    <svg
+      width="24"
+      height="24"
+      fill="#2a9b6f"
+      viewBox="0 0 24 24"
+      stroke="#2a9b6f"
+      strokeWidth={0.5}
+    >
+      <path
+        d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76
+               0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0
+               2.3 1.5 4.05 3 5.5l7 7Z"
+      />
     </svg>
   );
 }
 
 function BuildingIcon() {
   return (
-    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#2a9b6f" strokeWidth={2}>
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
     </svg>
   );
@@ -93,26 +104,18 @@ function CustomersIcon() {
   );
 }
 
-function SalesIcon() {
-  return (
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-    </svg>
-  );
-}
-
-function LowStockIcon() {
-  return (
-    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-    </svg>
-  );
-}
-
 function NotificationsIcon() {
   return (
     <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   );
 }
@@ -146,12 +149,12 @@ function NavSection({ label, items, onClose, isMobile }) {
 
 export default function Sidebar({
   onClose,
+  isMobile,
   pharmacyName = "HealthPlus Pharmacy",
   role = "buyer",
 }) {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
-  const isMobile = window.innerWidth < 768;
   const cartCount = getCartCount();
 
   function handleLogout() {
@@ -159,12 +162,11 @@ export default function Sidebar({
     navigate("/login");
   }
 
-  // Define route arrays for each role
+  // Navigation Links
   const NAV_BUYER = [
     { to: "/", label: "Home", icon: <HomeIcon /> },
     { to: "/medicines", label: "Medicines", icon: <MedicinesIcon /> },
-    { to: "/search", label: "Search", icon: <SearchIcon /> },
-    { to: "/cart", label: "Cart", icon: <CartIcon />, badge: cartCount > 0 ? cartCount : null },
+    { to: "/cart", label: "My Cart", icon: <CartIcon />, badge: cartCount > 0 ? cartCount : null },
     { to: "/prescription", label: "Prescription", icon: <PrescriptionIcon /> },
   ];
 
@@ -172,12 +174,7 @@ export default function Sidebar({
     { to: "/seller/dashboard", label: "Dashboard", icon: <HomeIcon /> },
     { to: "/seller/inventory", label: "Inventory", badge: "24", icon: <InventoryIcon /> },
     { to: "/seller/customers", label: "Customers", icon: <CustomersIcon /> },
-    { to: "/seller/sales", label: "Sales", icon: <SalesIcon /> },
-  ];
-
-  const NAV_SELLER_ALERTS = [
-    { to: "/seller/low-stock", label: "Low stock", badgeWarn: "6", icon: <LowStockIcon /> },
-    { to: "/seller/notifications", label: "Notifications", icon: <NotificationsIcon /> },
+    { to: "/seller/notifications", label: "Notifications", icon: <NotificationsIcon />, badgeWarn: "3" },
   ];
 
   const NAV_ADMIN = [
@@ -187,10 +184,9 @@ export default function Sidebar({
   ];
 
   const NAV_ACCOUNT = [
-    { to: "/profile", label: "Profile", icon: <ProfileIcon /> },
+    { to: "/profile", label: "Settings", icon: <ProfileIcon /> },
   ];
 
-  // Dynamically select sections based on role
   let sections = [];
   if (role === "buyer") {
     sections = [
@@ -200,7 +196,6 @@ export default function Sidebar({
   } else if (role === "seller") {
     sections = [
       { label: "Pharmacy Tools", items: NAV_SELLER },
-      { label: "Alerts", items: NAV_SELLER_ALERTS },
       { label: "Account", items: NAV_ACCOUNT },
     ];
   } else if (role === "admin") {
@@ -211,54 +206,64 @@ export default function Sidebar({
 
   return (
     <aside className="sidebar">
-      {/* Brand - Used on Large Screens where Header is hidden */}
-      <div className="sidebar-brand">
-        Medi<span className="sidebar-brand-accent">flow</span>
-      </div>
-
-      {/* Close button — mobile only */}
-      {isMobile && (
-        <div className="sidebar-top-row">
-          <span className="sidebar-menu-label">Menu</span>
-          <button className="close-btn" onClick={onClose}>
+      
+      {/* Header with Brand & Close */}
+      <div className="sidebar-header">
+        <div className="sidebar-brand-group" onClick={() => navigate("/")}>
+          <div className="sidebar-logo-icon">
+            <HeartIcon />
+          </div>
+          <div className="sidebar-brand">
+            Medi<span className="sidebar-brand-accent">flow</span>
+          </div>
+        </div>
+        
+        {/* Force render button if onClose is provided, CSS will hide it on desktop */}
+        {onClose && (
+          <button 
+            className="close-btn-sidebar mobile-only" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }} 
+            aria-label="Close sidebar"
+          >
             <CloseIcon />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
-      {sections.map((section) => (
-        <NavSection
-          key={section.label}
-          label={section.label}
-          items={section.items}
-          onClose={onClose}
-          isMobile={isMobile}
+      {/* Embedded Search */}
+      <div className="sidebar-search">
+        <div className="search-icon-fixed">
+          <SearchIcon />
+        </div>
+        <input 
+          type="text" 
+          placeholder="Search..." 
+          onKeyDown={(e) => e.key === 'Enter' && navigate('/search')}
         />
-      ))}
+      </div>
+
+      {/* Nav Content */}
+      <div className="sidebar-nav-content" style={{flex: 1}}>
+        {sections.map((section) => (
+          <NavSection
+            key={section.label}
+            label={section.label}
+            items={section.items}
+            onClose={onClose}
+            isMobile={isMobile}
+          />
+        ))}
+      </div>
 
       {/* Footer */}
       <div className="sidebar-footer">
         {role === "seller" && (
-          <div className="pharmacy-mini">
-            <div className="pharmacy-avatar">
-              <BuildingIcon />
-            </div>
-            <div>
-              <div className="pharmacy-name">{pharmacyName}</div>
-              <div className="pharmacy-status">Open now</div>
-            </div>
-          </div>
-        )}
-
-        {role === "admin" && (
-          <div className="pharmacy-mini">
-            <div className="pharmacy-avatar">
-              <BuildingIcon />
-            </div>
-            <div>
-              <div className="pharmacy-name">Admin Portal</div>
-              <div className="pharmacy-status">Super User</div>
-            </div>
+          <div className="pharmacy-mini" style={{background: 'transparent', padding: '0 12px 12px 12px', marginBottom: '12px', borderBottom: '1px solid #f1f5f9'}}>
+            <div className="pharmacy-name" style={{fontSize: '12px', color: '#64748b'}}>{pharmacyName}</div>
           </div>
         )}
 

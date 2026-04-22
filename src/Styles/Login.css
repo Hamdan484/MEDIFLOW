@@ -64,7 +64,84 @@
 .card-sub {
   font-size: 14px;
   color: #888;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+/* ── Role Tabs ── */
+.login-role-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.login-role-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  border: 1.5px solid #e8ede8;
+  background: #fafafa;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.login-role-tab:hover {
+  border-color: #2a9b6f;
+  background: #f0faf6;
+}
+
+.login-role-tab.active {
+  border-color: #2a9b6f;
+  background: #f0faf6;
+  box-shadow: 0 0 0 3px rgba(42, 155, 111, 0.12);
+}
+
+.role-emoji {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.role-tab-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+}
+
+.login-role-tab.active .role-tab-label {
+  color: #0c503b;
+}
+
+/* ── Role Description Bar ── */
+.role-desc-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #2a9b6f;
+  font-weight: 500;
+  background: #f0faf6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+}
+
+.role-desc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2a9b6f;
+  flex-shrink: 0;
+}
+
+/* ── Field hint ── */
+.login-field-hint {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 4px;
 }
 
 /* ── Form fields ── */

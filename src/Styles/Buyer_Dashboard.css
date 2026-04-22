@@ -138,7 +138,7 @@
 /* ── Stats row ── */
 .stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
   padding: 20px 20px 0;
 }

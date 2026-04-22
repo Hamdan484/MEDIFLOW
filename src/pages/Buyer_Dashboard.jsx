@@ -18,41 +18,91 @@ const DRUGS = [
     id: 1,
     name: "Paracetamol",
     generic: "Acetaminophen 500mg",
+    category: "Painkillers",
     price: 3.8,
     stores: 3,
     inStock: true,
   },
   {
     id: 2,
-    name: "Artemether",
-    generic: "Artemether/Lumefantrine",
-    price: 22.5,
+    name: "Ibuprofen",
+    generic: "Ibuprofen 400mg",
+    category: "Painkillers",
+    price: 5.5,
     stores: 2,
     inStock: true,
   },
   {
     id: 3,
+    name: "Artemether",
+    generic: "Artemether/Lumefantrine",
+    category: "Malaria",
+    price: 22.5,
+    stores: 2,
+    inStock: true,
+  },
+  {
+    id: 4,
+    name: "Chloroquine",
+    generic: "Chloroquine Phosphate 250mg",
+    category: "Malaria",
+    price: 9.0,
+    stores: 1,
+    inStock: false,
+  },
+  {
+    id: 5,
     name: "Amoxicillin",
     generic: "Amoxicillin 250mg caps",
+    category: "Antibiotics",
     price: 18.0,
     stores: 1,
     inStock: false,
   },
   {
-    id: 4,
+    id: 6,
+    name: "Azithromycin",
+    generic: "Azithromycin 500mg",
+    category: "Antibiotics",
+    price: 25.0,
+    stores: 3,
+    inStock: true,
+  },
+  {
+    id: 7,
     name: "Metformin",
     generic: "Metformin HCl 500mg",
+    category: "Diabetes",
     price: 12.0,
     stores: 2,
     inStock: true,
   },
   {
-    id: 5,
+    id: 8,
+    name: "Glibenclamide",
+    generic: "Glibenclamide 5mg",
+    category: "Diabetes",
+    price: 8.0,
+    stores: 2,
+    inStock: true,
+  },
+  {
+    id: 9,
     name: "Omeprazole",
     generic: "Omeprazole 20mg caps",
+    category: "Antacids",
     price: 8.5,
     stores: 1,
     inStock: false,
+  },
+  {
+    id: 10,
+    name: "Ranitidine",
+    generic: "Ranitidine 150mg",
+    category: "Antacids",
+    price: 6.0,
+    stores: 2,
+    inStock: true,
   },
 ];
 
@@ -122,11 +172,11 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const filtered = DRUGS.filter((d) => {
-    // TODO: wire activeCategory to drug categories once data has category field
+    const matchCat = activeCategory === "All" || d.category === activeCategory;
     const matchQ =
       d.name.toLowerCase().includes(query.toLowerCase()) ||
       d.generic.toLowerCase().includes(query.toLowerCase());
-    return matchQ;
+    return matchCat && matchQ;
   });
 
   return (

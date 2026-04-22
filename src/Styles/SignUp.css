@@ -160,6 +160,12 @@
   font-weight: 400;
 }
 
+.required-star {
+  color: #e11d48;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
 .field input,
 .field select {
   width: 100%;

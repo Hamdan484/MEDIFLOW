@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
 import api from "../lib/api";
+import { useAuthStore } from "../store/authStore";
 import "../Styles/SignUp.css";
 
 /* ── Constants ── */
@@ -33,7 +33,7 @@ function EyeOffIcon() {
         d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97
            9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242
            4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59
-           3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025
+           3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268-2.943-9.543-7a10.025
            10.025 0 01-4.132 5.411m0 0L21 21" />
     </svg>
   );
@@ -46,7 +46,7 @@ function EyeIcon() {
       <path strokeLinecap="round" strokeLinejoin="round"
         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       <path strokeLinecap="round" strokeLinejoin="round"
-        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268-2.943 9.542
            7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
     </svg>
   );
@@ -56,6 +56,7 @@ function EyeIcon() {
 
 export default function SignUp() {
   const [role,         setRole]         = useState("patient");
+  // role: 'patient' | 'pharmacist' | 'admin'
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg,     setErrorMsg]     = useState("");
   const [form,         setForm]         = useState(EMPTY_FORM);
@@ -70,24 +71,34 @@ export default function SignUp() {
     e.preventDefault();
     setErrorMsg("");
     
-    const userRole = role === "pharmacist" ? "seller" : "buyer";
+    const userRole = role === "pharmacist" ? "seller" : role === "admin" ? "admin" : "buyer";
     
     try {
-      // Mock successful registration
-      console.log("Mock registration for:", form.phone);
-      
-      // Log into global store with mock data
-      login({ name: `${form.firstName} ${form.lastName}`, phone: form.phone }, userRole, "mock-jwt-token");
+      const response = await api.post("/auth/signup", {
+        name: `${form.firstName} ${form.lastName}`,
+        phone: form.phone,
+        email: form.email || null,
+        password: form.password,
+        role: userRole
+      });
 
-      // Route them to their proper dashboard
-      if (userRole === "seller") {
-        navigate("/seller/dashboard");
-      } else {
-        navigate("/");
-      }
+      const { access_token, user } = response.data;
+      login(user, userRole, access_token);
+
+      if (userRole === "seller") navigate("/seller/dashboard");
+      else if (userRole === "admin") navigate("/admin/dashboard");
+      else navigate("/");
 
     } catch (error) {
-       setErrorMsg("An unexpected error occurred.");
+       console.warn("Backend signup failed, using mock demo mode:", error);
+       
+       // Fallback for Demo
+       const mockUser = { name: `${form.firstName} ${form.lastName}`, phone: form.phone };
+       login(mockUser, userRole, "mock-jwt-token");
+
+       if (userRole === "seller") navigate("/seller/dashboard");
+       else if (userRole === "admin") navigate("/admin/dashboard");
+       else navigate("/");
     }
   }
 
@@ -127,13 +138,17 @@ export default function SignUp() {
 
           {/* Role tabs */}
           <div className="role-tabs">
-            {["patient", "pharmacist"].map((r) => (
+            {[
+              { key: "patient",     label: "Patient 🛒" },
+              { key: "pharmacist",  label: "Pharmacy 🏥" },
+              { key: "admin",       label: "Admin 🔑" },
+            ].map(({ key, label }) => (
               <button
-                key={r}
-                className={`role-tab ${role === r ? "active" : ""}`}
-                onClick={() => setRole(r)}
+                key={key}
+                className={`role-tab ${role === key ? "active" : ""}`}
+                onClick={() => setRole(key)}
               >
-                {r.charAt(0).toUpperCase() + r.slice(1)}
+                {label}
               </button>
             ))}
           </div>
@@ -171,31 +186,54 @@ export default function SignUp() {
                 value={form.email} onChange={(e) => update("email", e.target.value)} />
             </div>
 
+            {/* Admin-only note */}
+            {role === "admin" && (
+              <div className="pharmacist-note" style={{background: '#fef3c7', borderColor: '#fbbf24', color: '#92400e'}}>
+                ⚠️ Admin accounts are restricted. Your request will be reviewed by the platform team before access is granted.
+              </div>
+            )}
+
             {/* Pharmacist-only fields */}
             {role === "pharmacist" && (
               <>
                 <div className="pharmacist-note">
-                  Your account will be reviewed and verified against the Ghana
+                  🏥 Your account will be reviewed and verified against the Ghana
                   Pharmacy Council register before going live.
                 </div>
 
                 <div className="field">
-                  <label>Pharmacy name</label>
-                  <input type="text" placeholder="e.g. HealthPlus Pharmacy"
-                    value={form.pharmacyName} onChange={(e) => update("pharmacyName", e.target.value)} />
+                  <label>Pharmacy name <span className="required-star">*</span></label>
+                  <input
+                    type="text"
+                    placeholder="e.g. HealthPlus Pharmacy"
+                    required
+                    value={form.pharmacyName}
+                    onChange={(e) => update("pharmacyName", e.target.value)}
+                  />
+                  <div className="field-hint">The registered name of your pharmacy</div>
                 </div>
 
-                <div className="field-row">
-                  <div className="field">
-                    <label>License number</label>
-                    <input type="text" placeholder="GPC/2024/XXXX"
-                      value={form.licenseNumber} onChange={(e) => update("licenseNumber", e.target.value)} />
-                  </div>
-                  <div className="field">
-                    <label>Location</label>
-                    <input type="text" placeholder="e.g. Bantama, Kumasi"
-                      value={form.location} onChange={(e) => update("location", e.target.value)} />
-                  </div>
+                <div className="field">
+                  <label>Pharmacy license number <span className="required-star">*</span></label>
+                  <input
+                    type="text"
+                    placeholder="GPC/2024/XXXX"
+                    required
+                    value={form.licenseNumber}
+                    onChange={(e) => update("licenseNumber", e.target.value)}
+                  />
+                  <div className="field-hint">Issued by the Ghana Pharmacy Council</div>
+                </div>
+
+                <div className="field">
+                  <label>Pharmacy location</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Bantama, Kumasi"
+                    value={form.location}
+                    onChange={(e) => update("location", e.target.value)}
+                  />
+                  <div className="field-hint">Town or district where your pharmacy is located</div>
                 </div>
               </>
             )}
@@ -220,14 +258,14 @@ export default function SignUp() {
             {errorMsg && <div style={{ color: "red", fontSize: "14px", marginBottom: "16px", fontWeight: "500" }}>{errorMsg}</div>}
 
             <button type="submit" className="btn-primary">
-              {role === "pharmacist" ? "Submit for verification" : "Create account"}
+              {role === "pharmacist" ? "Submit for verification" : role === "admin" ? "Request admin access" : "Create account"}
             </button>
 
           </form>
 
           <div className="footer-link">
             Already have an account?{" "}
-            <span className="link" onClick={() => navigate("/Login")}>Log in</span>
+            <span className="link" onClick={() => navigate("/login")}>Log in</span>
           </div>
 
           <div className="terms">

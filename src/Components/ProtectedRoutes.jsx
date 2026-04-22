@@ -6,7 +6,7 @@ export default function ProtectedRoutes({ allowedRoles }) {
 
   if (!user || !role) {
     // Not logged in
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/sign-up" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(role)) {

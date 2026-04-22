@@ -187,6 +187,13 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drug-row:hover {
+  border-color: #2a9b6f;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .drug-icon {
@@ -198,6 +205,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.drug-info {
+  flex: 1;
 }
 
 .drug-name {
@@ -212,37 +223,91 @@
   margin-top: 1px;
 }
 
-.drug-right {
-  margin-left: auto;
-  text-align: right;
+.drug-price-mobile {
+  display: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2a9b6f;
+  margin-top: 4px;
 }
 
-.drug-price {
+.drug-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.drug-price-desktop {
   font-size: 16px;
   font-weight: 700;
   color: #2a9b6f;
 }
 
+.drug-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-add-mini {
+  padding: 4px 10px;
+  background: #f0faf6;
+  color: #0c503b;
+  border: 1px solid #2a9b6f;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-buy-mini {
+  padding: 4px 10px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-add-mini:disabled, .btn-buy-mini:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .badge-in-stock {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   padding: 2px 8px;
   border-radius: 20px;
   background: #e1f5ee;
   color: #0c503b;
-  font-weight: 500;
-  margin-top: 3px;
+  font-weight: 600;
 }
 
 .badge-out-of-stock {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   padding: 2px 8px;
   border-radius: 20px;
   background: #fdecea;
   color: #b71c1c;
-  font-weight: 500;
-  margin-top: 3px;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .drug-price-desktop {
+    display: none;
+  }
+  .drug-price-mobile {
+    display: block;
+  }
+  .drug-row {
+    align-items: flex-start;
+  }
 }
 
 /* ── License ── */

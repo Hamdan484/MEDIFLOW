@@ -284,3 +284,67 @@
 .btn-directions:hover {
   background: #c8eddf;
 }
+
+/* ── Card action buttons ── */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-add-cart {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: #f0faf6;
+  color: #0c503b;
+  border: 1.5px solid #2a9b6f;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.btn-add-cart:hover:not(:disabled) {
+  background: #2a9b6f;
+  color: white;
+}
+
+.btn-add-cart:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-buy-now {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  background: #2a9b6f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.btn-buy-now:hover:not(:disabled) {
+  background: #228a5f;
+}
+
+.btn-buy-now:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
