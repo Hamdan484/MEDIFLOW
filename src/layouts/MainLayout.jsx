@@ -44,18 +44,26 @@ export default function MainLayout() {
       )}
 
       {/* Sidebar Container */}
-      <div style={{
-        position: isMobile ? "fixed" : "sticky",
-        top: 0,
-        height: "100vh",
-        zIndex: 102,
-        flexShrink: 0,
-        width: isMobile && !sidebarOpen ? "0" : "auto",
-        transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        transform: isMobile && !sidebarOpen ? "translateX(-100%)" : "translateX(0)",
-      }}>
-        <Sidebar role={role || "buyer"} onClose={() => setSidebarOpen(false)} isMobile={isMobile} />
-      </div>
+      {(!isMobile || sidebarOpen) && (
+        <div style={{
+          position: isMobile ? "fixed" : "sticky",
+          top: 0,
+          height: "100vh",
+          zIndex: 102,
+          flexShrink: 0,
+          background: "white",
+          boxShadow: isMobile ? "10px 0 30px rgba(0,0,0,0.1)" : "none"
+        }}>
+          <Sidebar 
+            role={role || "buyer"} 
+            onClose={() => {
+              console.log("DEBUG: onClose triggered in MainLayout");
+              setSidebarOpen(false);
+            }} 
+            isMobile={isMobile} 
+          />
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main style={{ 

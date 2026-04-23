@@ -222,14 +222,19 @@ export default function Sidebar({
         {onClose && (
           <button 
             className="close-btn-sidebar mobile-only" 
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              console.log("DEBUG: X Button clicked in Sidebar.jsx");
               onClose();
             }} 
             aria-label="Close sidebar"
+            style={{ pointerEvents: 'auto' }}
           >
-            <CloseIcon />
+            <div style={{ pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CloseIcon />
+            </div>
           </button>
         )}
       </div>
